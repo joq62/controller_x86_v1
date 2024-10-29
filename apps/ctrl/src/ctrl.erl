@@ -244,6 +244,15 @@ handle_cast(UnMatchedSignal, State) ->
 	  {noreply, NewState :: term(), hibernate} |
 	  {stop, Reason :: normal | term(), NewState :: term()}.
 handle_info(timeout, State) ->
+    
+    % init log dir
+    %% Fix log
+    file:del_dir_r(?MainLogDir),
+    file:make_dir(?MainLogDir),
+    [NodeName,_HostName]=string:tokens(atom_to_list(node()),"@"),
+    NodeNodeLogDir=filename:join(?MainLogDir,NodeName),
+    ok=log:create_logger(NodeNodeLogDir,?LocalLogDir,?LogFile,?MaxNumFiles,?MaxNumBytes),
+    
     initial_trade_resources(),
     Self=self(),
     spawn_link(fun()->rd_loop(Self) end),

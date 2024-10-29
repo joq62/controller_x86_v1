@@ -45,7 +45,7 @@ start()->
    
     ok=setup(),
     ApplicationToTest=list_to_atom("test_"++?Appl),
-    ok=rpc:call(get_node(?NodeName),ApplicationToTest,start,[],10*5000),
+    ok=rpc:call(get_node(?NodeName),ApplicationToTest,start,[]),
 
     file:del_dir_r(?ApplDir),   
     rpc:call(get_node(?NodeName),init,stop,[],5000),
